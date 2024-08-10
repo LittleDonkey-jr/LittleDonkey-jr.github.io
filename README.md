@@ -87,6 +87,5 @@ If you find any problems, please submit an Issue!
 
 ## 🎉 Thanks
 
-@[Saicaca](https://github.com/saicaca) His inspiration was the main reason I created this theme
+@[EveSunMaple](https://github.com/EveSunMaple) original authors
 
-@[WRXinYue](https://github.com/WRXinYue) Helped me a lot when I was getting started
