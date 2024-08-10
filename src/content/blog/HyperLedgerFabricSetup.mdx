@@ -1,0 +1,291 @@
+---
+title: "HyperLedgerFabric安装"
+description: "如何安装Fabric及Benchmark"
+pubDate: "Jul 02 2024"
+image: "/bag.webp"
+categories:
+  - tech
+tags:
+  - tag
+---
+
+
+# HyperledgerFabric  
+## 参考文档  
+[参考链接1](https://blog.csdn.net/qq_45034708/article/details/124707919)
+
+[参考链接2](https://zhuanlan.zhihu.com/p/512144678?utm_id=0)  
+
+### 修改源-Ubuntu20.04清华源
+```
+sudo nano /etc/apt/sources.list
+```
+```
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal main restricted universe multiverse
+
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-updates main restricted universe multiverse
+
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ focal-backports main restricted universe multiverse
+
+deb http://security.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
+
+```
+
+## 安装依赖  
+```
+sudo apt-get update
+sudo apt-get install git curl docker.io docker-compose nodejs npm python jq
+```
+nodejs版本不匹配需要手动下载正确的版本>=18.0
+[nodejs官网](https://nodejs.cn/download/ )
+```
+xz -d xxx.tar.xz  
+tar xvf xxx.tar  
+sudo vim /etc/profile  
+export PATH=$HOME/Downloads/xxx/bin:$PATH
+source /etc/profile
+sudo ln -s $HOME/Downloads/xxx/bin/npm /usr/bin/
+sudo ln -s $HOME/Downloads/xxx/bin/node /usr/bin/
+sudo node -v
+sudo npm -v
+```
+## 配置Docker
+配置Docker镜像加速  
+方法一
+```
+https://developer.aliyun.com/article/1483992
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://fsko0e83.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+方法二
+```
+https://www.bilibili.com/read/cv35387254/
+
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+"registry-mirrors": [
+"https://docker.m.daocloud.io",
+"https://huecker.io",
+"https://dockerhub.timeweb.cloud",
+"https://noohub.ru"
+]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+添加用户组
+```
+sudo usermod -a -G docker $USER
+# 添加docker用户组
+sudo groupadd docker
+# 将当前用户添加至docker用户组
+sudo gpasswd -a $USER docker
+# 更新docker用户组
+newgrp docker                 
+
+#dell更换为你的用户名
+sudo setfacl -m user:dell:rw /var/run/docker.sock
+
+sudo systemctl start docker
+sudo systemctl enable docker
+
+# 查看镜像地址是否已被添加在registry-mirrors下
+sudo docker info
+# 测试docker能否正常使用  
+sudo docker run hello-world
+```
+docker-compose  
+```
+sudo docker-compose version
+```  
+## Go安装  
+```
+根据fabric版本选择合适的go版本
+cd /usr/local
+sudo wget https://golang.google.cn/dl/go1.22.4.linux-amd64.tar.gz
+sudo tar -zxvf go1.22.4.linux-amd64.tar.gz
+```
+```
+sudo vim /etc/profile
+
+#添加一下代码
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$PATH:/usr/local/go/bin
+
+export PATH=$PATH:$GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/bin
+export PATH=$PATH:$GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/config
+
+source /etc/profile #刷新缓存
+go version #查看版本
+go env #查看变量
+```  
+## 下载Fabric  
+```
+sudo mkdir -p $GOPATH/src/github.com/hyperledger/
+cd $GOPATH/src/github.com/hyperledger/
+git clone https://github.com/hyperledger/fabric.git
+
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts
+git clone https://github.com/hyperledger/fabric-samples.git
+
+vim bootstrap.sh
+查看版本
+```
+下载Fabric相关二进制文件
+```
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples
+
+wget https://github.com/hyperledger/fabric/releases/download/v2.5.4/hyperledger-fabric-linux-amd64-2.5.4.tar.gz
+wget https://github.com/hyperledger/fabric-ca/releases/download/v1.5.7/hyperledger-fabric-ca-linux-amd64-1.5.7.tar.gz
+
+tar -zxvf hyperledger-fabric-linux-amd64-2.5.4.tar.gz
+tar -zxvf hyperledger-fabric-ca-linux-amd64-1.5.7.tar.gz
+```  
+安装相关Docker镜像
+```
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts
+sudo ./bootstrap.sh -db  报错找不到v2.5.4可跳过该步骤
+sudo ./bootstrap.sh -sb
+sudo docker images #测试
+```
+可能需要的操作
+```
+sudo chmod -R 777 $GOPATH
+sudo vim /etc/profile
+
+#添加一下代码
+export PATH=$PATH:$GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/bin
+export PATH=$PATH:$GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/config
+
+source /etc/profile #刷新缓存
+peer version #查看版本
+```
+
+## Go依赖修改国内源
+```
+[root@localhost fabric-samples]# cd $GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/asset-transfer-basic/chaincode-go/  #进入目录
+[root@localhost chaincode-go]# ls                                       #查看目录内容
+assetTransfer.go  chaincode  go.mod  go.sum                             #此时没有vendor目录
+[root@localhost chaincode-go]# go env                                   #查看go环境配置
+......
+GOPROXY="https://proxy.golang.org,direct"                               #查看代理设置
+......
+[root@localhost chaincode-go]# go env -w GOPROXY=https://goproxy.cn     #更改代理
+[root@localhost chaincode-go]# go mod vendor                            #安装依赖
+[root@localhost chaincode-go]# ls                                       #查看目录内容
+assetTransfer.go  chaincode  go.mod  go.sum  vendor                     #此时出现vendor目录
+```
+
+## Fabric samples测试  
+```
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network
+sudo ./network.sh up
+```
+
+## 启动测试区块链  
+```
+su root 
+source /etc/profile
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network  
+./network.sh up createChannel  
+./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-go -ccl go  
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/asset-transfer-basic/application-gateway-go  
+go run .
+```
+
+## 配置Docker镜像加速
+```
+https://developer.aliyun.com/article/1483992
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://fsko0e83.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+```
+https://www.bilibili.com/read/cv35387254/
+
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+"registry-mirrors": [
+"https://docker.m.daocloud.io",
+"https://huecker.io",
+"https://dockerhub.timeweb.cloud",
+"https://noohub.ru"
+]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
+
+## Caliper测试工具使用下载  
+[参考网址](https://blog.csdn.net/sbsy123456/article/details/134999886?utm_medium=distribute.pc_relevant.none-task-blog-2~default~baidujs_baidulandingword~default-0-134999886-blog-123493927.235^v43^pc_blog_bottom_relevance_base9&spm=1001.2101.3001.4242.1&utm_relevant_index=1)  
+[Caliper官网](https://hyperledger.github.io/caliper/v0.6.0/workload-module/)
+```
+切换到fabric-samples同级的目录
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts/
+
+git clone https://github.com/hyperledger/caliper-benchmarks.git
+
+
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts/caliper-benchmarks
+#根据版本修改后面的数字，目前最新的版本为0.6.0
+npm config set registry https://registry.npmmirror.com
+
+npm install --only=prod @hyperledger/caliper-cli@0.6.0
+
+#检查当前版本
+npx caliper --version
+
+#绑定fabric版本，目前最新版为2.5
+npx caliper bind --caliper-bind-sut fabric:2.5
+```
+启动测试网络
+```
+cd $GOPATH/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network
+
+./network.sh up createChannel
+
+./network.sh deployCC -ccn fabcar -ccp ../../caliper-benchmarks/src/fabric/samples/fabcar/go -ccl go
+
+popd
+npx caliper launch manager --caliper-workspace ./ --caliper-networkconfig networks/fabric/test-network.yaml --caliper-benchconfig benchmarks/samples/fabric/fabcar/config.yaml --caliper-flow-only-test --caliper-fabric-gateway-enabled
+```
+## 在不同机器上使用Caliper  
+```
+从部署了chaincode的服务器上下载test-network文件并替换测试机器上的该文件
+scp -r cat@xxx:home/cat/go/go/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network/ ./
+
+#popd指令也一起复制并执行
+popd
+npx caliper launch manager --caliper-workspace ./ --caliper-networkconfig networks/fabric/test-network.yaml --caliper-benchconfig benchmarks/samples/fabric/fabcar/config.yaml --caliper-flow-only-test --caliper-fabric-gateway-enabled
+```
+
+## 其他可能的问题
+权限问题  
+```
+用root账户执行相关命令
+./network.sh deployCC -ccn basic -ccp ../asset-transfer-basic/chaincode-go/ -ccl go
+
+cd /home/dell/go/src/github.com/hyperledger/fabric/scripts/fabric-samples/test-network/scripts
+chmod 777 *.sh
+```
+[PipInstall镜像加速](https://zhuanlan.zhihu.com/p/696025910)
+```
+pip install --index-url https://pypi.tuna.tsinghua.edu.cn/simple/ package-name
+```
