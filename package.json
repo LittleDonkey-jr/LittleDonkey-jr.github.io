@@ -1,5 +1,5 @@
 {
-  "name": "exotic-earth",
+  "name": "frosti",
   "type": "module",
   "version": "2.5.2",
   "scripts": {
@@ -10,7 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.2",
+    "@astrojs/check": "^0.8.3",
     "@astrojs/mdx": "^2.3.1",
     "@astrojs/rss": "^4.0.7",
     "@astrojs/sitemap": "^3.1.6",

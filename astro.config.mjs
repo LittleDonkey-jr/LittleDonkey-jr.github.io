@@ -11,7 +11,7 @@ import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://frosti.saroprock.com',
+  site: 'https://LittleDonkey-jr.github.io',
   style: {
     scss: {
       includePaths: ['./src/styles']
