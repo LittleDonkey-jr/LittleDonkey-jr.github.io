@@ -60,32 +60,44 @@ export const menuItems = [
         svg: "cube",
         target: "_self",
       }, // Technology category
+      
       {
         id: "life",
-        text: "生活博客",
+        text: "部署教程",
         href: "/blog/categories/life",
         svg: "heart",
         target: "_self",
       }, // Life category
+      
     ],
   }, // Blog page with sub-items
+
+  {
+    id: "show",
+    text: "项目展示",
+    href: "/show",
+    svg: "show",
+    target: "_self",
+  }, 
   {
     id: "project",
-    text: "项目",
+    text: "项目链接",
     href: "/project",
     svg: "project",
     target: "_self",
   }, // Projects page
-  {
+  
+  /*{
     id: "friend",
     text: "朋友",
     href: "/friend",
     svg: "friend",
     target: "_self",
   }, // Friends page
+  */
   {
     id: "contact",
-    text: "联系",
+    text: "邮箱",
     href: "mailto:x1311037907@outlook.com", // Contact email
     target: "_blank", // Open in a new tab
     svg: "contact",
@@ -95,22 +107,10 @@ export const menuItems = [
 // Social media and contact icons
 export const socialIcons = [
   {
-    href: "https://afdian.net/a/saroprock",
-    ariaLabel: "Support my work",
-    title: "Support my work",
-    svg: "support",
-  },
-  {
-    href: "https://github.com/EveSunMaple",
+    href: "https://github.com/LittleDonkey-jr",
     ariaLabel: "Github",
     title: "Github",
     svg: "github",
-  },
-  {
-    href: "https://space.bilibili.com/438392347",
-    ariaLabel: "BiliBili",
-    title: "BiliBili",
-    svg: "bilibili",
   },
   {
     href: "/rss.xml",
