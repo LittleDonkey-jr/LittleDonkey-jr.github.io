@@ -1,0 +1,39 @@
+---
+title: "智能家居系统设计"
+description: "项目展示"
+pubDate: "Jul 02 2024"
+image: https://saroprock.oss-cn-hangzhou.aliyuncs.com/img/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98.png
+categories:
+  - tech
+tags:
+  - tag
+---
+## 概述  
+本文设计的智能家居系统，主要完成对一些常用的家居设备的远程智能控制。
+在该系统中，网关模块和智能家居模块构成，能够实现的功能包括电动窗帘的开闭、灯光的自动调节和手动调节、自动门锁等，通过无线通信模块实现数据通信。
+并且将这些设备的状态信息和控制集成在Unity3D制作的上位机软件中。
+### 系统整体架构
+系统的整体架构分为三个部分    
+1.上位机软件(Unity3D)  
+2.网关(全志H616)  
+3.智能家居模块(Stm32RCT6)
+![BaseStruct](/./SmartHome/Base.jpg)
+
+## 展示
+### Unity3D展示视频
+视频展示了三种控制方式  
+1、桌面台灯的开关以及亮度  
+2、窗帘的开关  
+3、门的开关
+<video src="/./SmartHome/movie.mp4" controls></video>
+
+### 智能家居沙盒模型
+![SandBox](/./SmartHome/SandBoxModel.jpg)
+
+### 智能家居模块
+#### 灯
+![Light](/./SmartHome/LightControl.jpg)
+#### 窗帘
+![Curtain](/./SmartHome/CurtainControl.jpg)
+#### 门
+![Door](/./SmartHome/DoorControl.jpg)
