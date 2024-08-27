@@ -1,6 +1,6 @@
 ---
 title: "C/C++知识点"
-description: "牛客刷题知识点记录"
+description: "知识点记录"
 pubDate: "Jul 02 2024"
 image: https://saroprock.oss-cn-hangzhou.aliyuncs.com/img/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98.png
 categories:
@@ -17,4 +17,33 @@ tags:
 ## 类
 1、空类的内存大小是1字节。  
 2、类中无论有多少个虚函数，只会多占一个虚表指针的空间。  
+### 1、类的继承规则
+| 类型 | public | protected | private |
+| :---: | :---: | :----: | :---: |
+| **public** | public | protected | private|
+| **protected** | protected | protected | private|
+| **private** | private | private | private|
 
+## 大端地址小端地址  
+小端(高高低低)地址--高地址对应数据高位，低地址对应数据低位    
+大端地址(高低高低)--高地址对应数据低位，低地址对应数据高位  
+ 
+数据: 0xAABBCC  
+&emsp;&emsp;高位$\Longleftarrow$低位
+
+**小端内存中**: 
+| 数据 | 0xCC | 0xBB| 0xAA |
+| --- | :---: | :----: | :---: |
+| 地址 | 0x00 | 0x01 | 0x02 |
+
+**大端内存中**:
+
+| 数据 | 0xAA | 0xBB| 0xCC |
+| --- | :---: | :----: | :---: |
+| 地址 | 0x00 | 0x01 | 0x02 |  
+
+## 位运算
+```  
+  i = i & (i-1) 统计i二进制中有多少个1   
+  i = i | (i+1) 统计i二进制中有多少个0  
+```

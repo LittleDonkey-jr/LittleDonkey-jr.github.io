@@ -62,9 +62,9 @@ export const menuItems = [
       }, // Technology category
       
       {
-        id: "life",
+        id: "deploy",
         text: "部署教程",
-        href: "/blog/categories/life",
+        href: "/blog/categories/deploy",
         svg: "heart",
         target: "_self",
       }, // Life category

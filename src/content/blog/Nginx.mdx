@@ -1,0 +1,47 @@
+---
+title: "Nginx配置"
+description: "测试"
+pubDate: "Jul 02 2024"
+image: https://saroprock.oss-cn-hangzhou.aliyuncs.com/img/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98.png
+categories:
+  - deploy
+tags:
+  - tag
+---
+
+
+## Nginx 配置
+```
+sudo apt install nginx
+sudo nano /etc/nginx/sites-available/default
+```
+监听端口4321
+```
+# Default server configuratio
+server {
+	listen 80;
+	server_name _; 
+
+	location / {
+		# First attempt to serve request as file, then
+		# as directory, then fall back to displaying a 404.
+		
+	        proxy_pass http://localhost:4321;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_cache_bypass $http_upgrade;
+	}
+
+	location /ws {
+                proxy_pass http://localhost:4321/ws;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Host $host;
+	}
+}
+```
+
+
