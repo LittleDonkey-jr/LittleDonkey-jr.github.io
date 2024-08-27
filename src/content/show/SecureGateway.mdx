@@ -8,20 +8,20 @@ categories:
 tags:
   - tag
 ---
-## 概述  
-开展基于自主硬件高安全认证接入、芯片级安全评估、特定协议硬件加速等方面的技术研究，
+## 背景概述  
+项目开展基于自主硬件高安全认证接入、芯片级安全评估、特定协议硬件加速等方面的技术研究，
 研制具备高中低三种接入能力的安全接入网关和安全接入管理设备，构建通道安全接入子系统，
 为互联网环境下移动/固定用户终端提供安全接入能力。  
-
-## Linux系统架构  
+## 安全网关设计
+### Linux系统架构  
 基于TrustZone技术将Linux系统划分为TEE和REE执行环境
 ![BootProgress](/./SecureGateWay/BootProgress.jpg)
 
-## 安全存储  
+### 安全存储  
 一些关键的隐私数据存储通过安全世界的安全存储功能进行处理
 ![SecureStorage](/./SecureGateWay/SecureStorage.jpg)
 
-## 系统传输数据  
+### 系统传输数据  
 用户传输数据的简易流程
 ![SystemStruct](/./SecureGateWay/SystemStruct.jpg)
 
@@ -29,6 +29,8 @@ tags:
 论文：
 - [《基于TrustZone的MQTT可信通信方案设计》](https://link.cnki.net/urlid/10.1910.V.20240819.1330.004)    
 
-网关成品：  
-
+### 网关成品：  
 ![GateWay](/./SecureGateWay/GateWay.jpg)
+### QT文件传输测试程序：
+![Server](/./SecureGateWay/ServerClient.png)
+![Client](/./SecureGateWay/UserClient.png)
